@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>トロント日本語情報便利サイト：Toronto Jlinks</title>
+  <style>
+    body {
+      font-family: "Meiryo", "MS PGothic", "Yu Gothic", "Noto Sans JP", Arial, sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+      font-size: 13px;
+      transform: scale(0.75);
+      transform-origin: top center; 
+    }
+
+    header {
+      /* 渐变色：左侧黄色减少，中间橙红色增加，右侧褐色 */
+      background: linear-gradient(90deg, #FFD700 40%, #FF8C42 75%, #B86B2B 100%);
+      padding:0.2rem 0;
+      margin: 20px auto;
+      width: 1200px;
+      /* SVG 枫叶图案 */
+      background-image:
+        url('data:image/svg+xml;utf8,<svg width="80" height="80" viewBox="0 0 80 80" fill="orange" xmlns="http://www.w3.org/2000/svg"><path d="M40 5 L45 30 L70 25 L50 40 L60 60 L40 50 L20 60 L30 40 L10 25 L35 30 Z" fill="orange" stroke="orangered" stroke-width="2"/></svg>'),
+        linear-gradient(90deg, #FFD700 40%, #FF8C42 75%, #B86B2B 100%);
+      background-repeat: no-repeat;
+      background-position: right 30px top 10px;
+      background-size: 80px 80px, 100% 100%;
+    }
+
+    .header-content {
+      width: 90%;
+      max-width: 1200px;
+      margin: 0 auto;
+      text-align: center;
+      position: relative;  /* 重点 */
+    }
+
+    .header-content img {
+      display: block;
+      margin: 20px auto;
+      width: 100%;
+      max-width: 1100px;
+      height: auto;
+      
+    }
+
+    .header-content h1 {
+      font-size: 1.5rem;
+      margin-top: 1rem;
+      color: #ffffff;
+    }
+    
+    .language-switcher {
+  position: absolute;
+  bottom: 10px;
+  right: 20px;
+}
+
+.language-switcher a {
+  color: #fff;
+  text-decoration: none;
+  margin: 0 5px;
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  transition: background 0.3s;
+}
+
+.language-switcher a:hover {
+  background-color: rgba(255, 255, 255, 0.4);
+
+
+  .language-switcher span {
+  color: #ccc;
+  font-weight: bold;
+  padding: 5px 10px;
+}
+
+}
+
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .media-section {
+      margin: 40px 0;
+      background-color: #ffffff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      padding: 20px;
+    }
+
+    .media-inner {
+      width: 66%;
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    .media-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .media-section h2 {
+      margin: 0;
+      font-size: 1.4rem;
+      color: #B86B2B;
+    }
+
+    .media-stats {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    .media-stat {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .stat-value {
+      font-weight: bold;
+      color: #333;
+    }
+
+    .like-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid #388E3C;
+      background-color: #ffffff;
+      color: #388E3C;
+      border-radius: 999px;
+      padding: 6px 12px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background-color 0.3s, color 0.3s, transform 0.2s;
+    }
+
+    .like-button:hover {
+      background-color: #388E3C;
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+
+    .media-player {
+      display: block;
+      width: 100%;
+      margin: 20px 0 0;
+      border-radius: 6px;
+      background-color: #000;
+    }
+
+    .playlist {
+      list-style: none;
+      margin: 15px 0 0;
+      padding: 0;
+    }
+
+    .playlist li + li {
+      margin-top: 10px;
+    }
+
+    .playlist button {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #388E3C;
+      background-color: #ffffff;
+      color: #388E3C;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: background-color 0.3s, color 0.3s, transform 0.2s;
+    }
+
+    .playlist button:hover {
+      background-color: #388E3C;
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+
+    .playlist button.is-active {
+      background-color: #388E3C;
+      color: #ffffff;
+      box-shadow: 0 6px 12px rgba(56, 142, 60, 0.2);
+    }
+
+    @media (max-width: 768px) {
+      .media-header {
+        align-items: flex-start;
+      }
+
+      .media-inner {
+        width: 100%;
+      }
+
+      .media-player {
+        width: 100%;
+      }
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: -10px;
+    }
+
+    .card {
+      flex: 0 0 calc(20% - 20px);
+      margin: 10px;
+      background-color: #ffffff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      text-align: center;
+      padding: 15px;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+    }
+
+    .card a {
+      text-decoration: none;
+      color: #388E3C;
+      font-weight: bold;
+      display: block;
+      font-size: 1rem;
+    }
+
+    .counter {
+      margin-top: 10px;
+    }
+
+    footer {
+      color: #fff;
+      background-color: #388e77;
+      padding: 1rem 0;
+      margin-top: 20px;
+      font-size:medium;
+    }
+
+    .footer-content {
+      width: 80%;
+      max-width: 1200px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .footer-content p {
+      margin: 0.2rem 0;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- 顶部横幅 -->
+  <header>
+    <div class="header-content">
+      <img src="images/logo-banner.png" alt="サイトロゴ">
+      <h1>トロント日本語情報便利サイト</h1>
+<!-- 语言切换按钮 -->
+<div class="language-switcher">
+  
+  <a href="index2.html">English</a>
+
+    </div>
+  </header>
+
+  <!-- 主内容区 -->
+  <div class="container">
+    <div class="row">
+
+      <!-- ▼▼▼ 链接开始 ▼▼▼ -->
+
+     
+     
+      <div class="card"><a href="https://www.jpcanada.com/" target="_blank">JPカナダ掲示板</a></div>
+<div class="card"><a href="http://torontonikkeiforum.forumotion.com/f1-toronto-nikkei-forum" target="_blank">トロント日系掲示板</a></div>
+<div class="card"><a href="https://www.jccc.on.ca/" target="_blank">トロント日系文化会館</a></div>
+<div class="card"><a href="https://chatgpt.com/g/g-8sPlJ64Gn-tiyatuto" target="_blank">GPT Japan</a></div>
+<div class="card"><a href="http://www.asahi.com/" target="_blank">朝日新聞</a></div>
+
+      <div class="card"><a href="http://www.yomiuri.co.jp/" target="_blank">読売新聞</a></div>
+<div class="card"><a href="http://mainichi.jp/" target="_blank">毎日新聞</a></div>
+<div class="card"><a href="http://www.nikkei.co.jp/" target="_blank">日経新聞</a></div>
+<div class="card"><a href="https://www.sankei.com/" target="_blank">産経新聞</a></div>
+<div class="card"><a href="https://www.goo.ne.jp/" target="_blank">GOOニュース</a></div>
+<div class="card"><a href="https://www.msn.com/ja-jp/news" target="_blank">MSNニュース</a></div>
+<div class="card"><a href="https://www.yahoo.co.jp/" target="_blank">Yahoo！Japan</a></div>
+<div class="card"><a href="http://www.nikkansports.com/" target="_blank">日刊スポーツ</a></div>
+<div class="card"><a href="http://www.cbc.ca/" target="_blank">CBC.ca</a></div>
+<div class="card"><a href="http://edition.cnn.com/" target="_blank">CNN.com</a></div>
+<div class="card"><a href="http://www.usatoday.com/" target="_blank">USA TODAY</a></div>
+<div class="card"><a href="http://www.wbur.org/" target="_blank">WBUR24</a></div>
+<div class="card"><a href="https://www.cp24.com/" target="_blank">CP24</a></div>
+<div class="card"><a href="http://www.freeintertv.com/view/id-3366/Canada-1-0-1" target="_blank">Citynews HD</a></div>
+<div class="card"><a href="https://aqstream.com/jp/nhkw/NHK-World-2" target="_blank">TV-NHK</a></div>
+<div class="card"><a href="https://aqstream.com/jp/tvt/TV-Tokyo" target="_blank">TV Tokyo</a></div>
+<div class="card"><a href="https://aqstream.com/jp/fuji/Fuji-TV" target="_blank">TV-FNN</a></div>
+<div class="card"><a href="https://aqstream.com/jp/ntv/NTV" target="_blank">TV-NTV</a></div>
+<div class="card"><a href="https://yeslivetv.com/channels/tv-asahi/" target="_blank">TV-ANN</a></div>
+<div class="card"><a href="https://aqstream.com/jp/tbs/TBS" target="_blank">TV-TBS</a></div>
+<div class="card"><a href="https://globalnews.ca/" target="_blank">Global News</a></div>
+<div class="card"><a href="http://www.thestar.com/" target="_blank">Toronto Star</a></div>
+<div class="card"><a href="https://www.bloomberg.com/" target="_blank">Bloomberg</a></div>
+<div class="card"><a href="https://www.reuters.com/" target="_blank">Reuters</a></div>
+<div class="card"><a href="https://www.bbc.com/news" target="_blank">BBC News</a></div>
+<div class="card"><a href="https://www.nytimes.com/" target="_blank">New York Times</a></div>
+<div class="card"><a href="https://www.wsj.com/" target="_blank">Wall Street Journal</a></div>
+<div class="card" style="background-color: #fff8dc"><a href="https://openai.com/chatgpt" target="_blank">ChatGPT（OpenAI公式）</a></div>
+<div class="card" style="background-color: #fff8dc" ><a href="https://bard.google.com/" target="_blank">Google Bard（Gimini）</a></div>
+<div class="card" style="background-color: #fff8dc"><a href="https://chat.deepseek.com/" target="_blank">Deepseek</a></div>
+<div class="card" style="background-color: #fff8dc"><a href="https://grok.com/" target="_blank">Grok </a></div>
+<div class="card" style="background-color: #fff8dc"><a href="https://copilot.microsoft.com/chats/e6jbpzcjBa4uLKPpsKMzM" target="_blank">Copilot</a></div>
+<div class="card"><a href="https://perplexity.ai/" target="_blank">Perplexity AI（検索AI）</a></div>
+<div class="card"><a href="https://www.runwayml.com/" target="_blank">Runway ML（ビデオAI）</a></div>
+<div class="card"><a href="https://deepl.com/translator" target="_blank">DeepL翻訳</a></div>
+<div class="card"><a href="https://suno.com/" target="_blank">Suno AI（音楽生成AI）</a></div>
+<div class="card"><a href="https://www.midjourney.com/" target="_blank">Midjourney（画像生成AI）</a></div>
+<div class="card"><a href="https://www.nhk.or.jp/nhkworld/" target="_blank">NHK World</a></div>
+<div class="card"><a href="https://www3.nhk.or.jp/news/" target="_blank">NHK 日本語ニュース</a></div>
+<div class="card"><a href="https://www.fnn.jp/" target="_blank">FNN プライムオンライン</a></div>
+<div class="card"><a href="https://www.tokyo-np.co.jp/" target="_blank">東京新聞</a></div>
+<div class="card"><a href="https://torja.ca/" target="_blank">TORJA（トロント情報誌）</a></div>
+<div class="card"><a href="http://www.japanada.com/" target="_blank">ジャパナダ（Japanada）</a></div>
+<div class="card"><a href="http://torontolife.com/" target="_blank">Toronto Life</a></div>
+<div class="card"><a href="https://www.blogto.com/" target="_blank">BlogTO</a></div>
+<div class="card"><a href="https://www.timeout.com/toronto" target="_blank">TimeOut Toronto</a></div>
+<div class="card"><a href="https://www.tripadvisor.ca/Tourism-g155019-Toronto_Ontario-Vacations.html" target="_blank">TripAdvisor Toronto</a></div>
+<div class="card"><a href="https://www.toronto.ca/" target="_blank">City of Toronto</a></div>
+<div class="card"><a href="https://www.ttc.ca/" target="_blank">TTC（トロント交通局）</a></div>
+<div class="card"><a href="https://www.torontopearson.com/" target="_blank">トロントピアソン国際空港</a></div>
+<div class="card"><a href="https://www.flyporter.com/" target="_blank">Porter Airlines</a></div>
+<div class="card"><a href="https://www.aircanada.com/" target="_blank">Air Canada</a></div>
+<div class="card"><a href="https://www.westjet.com/" target="_blank">WestJet</a></div>
+<div class="card"><a href="https://www.costco.ca/" target="_blank">Costco カナダ</a></div>
+<div class="card"><a href="https://www.walmart.ca/" target="_blank">Walmart カナダ</a></div>
+<div class="card"><a href="https://www.bestbuy.ca/" target="_blank">Best Buy カナダ</a></div>
+<div class="card"><a href="https://www.canadiantire.ca/" target="_blank">Canadian Tire</a></div>
+<div class="card"><a href="https://www.amazon.ca/" target="_blank">Amazon カナダ</a></div>
+<div class="card"><a href="https://www.ikea.com/ca/en/" target="_blank">IKEA カナダ</a></div>
+<div class="card"><a href="https://www.homedepot.ca/" target="_blank">Home Depot カナダ</a></div>
+<div class="card"><a href="https://www.loblaws.ca/" target="_blank">Loblaws</a></div>
+<div class="card"><a href="https://www.metro.ca/" target="_blank">Metro カナダ</a></div>
+<div class="card"><a href="https://www.nofrills.ca/" target="_blank">No Frills</a></div>
+<div class="card"><a href="https://www.shoppersdrugmart.ca/" target="_blank">Shoppers Drug Mart</a></div>
+<div class="card"><a href="https://www.cra-arc.gc.ca/" target="_blank">Canada Revenue Agency (CRA)</a></div>
+<div class="card"><a href="https://www.canada.ca/en/services/jobs.html" target="_blank">カナダ 求人情報</a></div>
+<div class="card"><a href="https://www.kijiji.ca/" target="_blank">Kijiji（クラシファイド）</a></div>
+<div class="card"><a href="https://www.monster.ca/" target="_blank">Monster カナダ（求人情報）</a></div>
+<div class="card"><a href="https://www.jobbank.gc.ca/home" target="_blank">Job Bank（カナダ政府求人）</a></div>
+<div class="card"><a href="https://www.tdsb.on.ca/" target="_blank">トロント公立学校 (TDSB)</a></div>
+<div class="card"><a href="https://www.tcdsb.org/" target="_blank">カトリック公立学校 (TCDSB)</a></div>
+<div class="card"><a href="https://www.utoronto.ca/" target="_blank">トロント大学</a></div>
+<div class="card"><a href="https://www.yorku.ca/" target="_blank">ヨーク大学</a></div>
+<div class="card"><a href="https://www.torontomu.ca/" target="_blank">トロント·メトロポリタン大学</a></div>
+<div class="card"><a href="https://www.centennialcollege.ca/" target="_blank">センテニアルカレッジ</a></div>
+<div class="card"><a href="https://www.georgebrown.ca/" target="_blank">ジョージブラウンカレッジ</a></div>
+<div class="card"><a href="https://www.senecacollege.ca/" target="_blank">セネカカレッジ</a></div>
+<div class="card"><a href="https://www.ilac.com/" target="_blank">ILAC（語学学校）</a></div>
+<div class="card"><a href="https://www.ecenglish.com/en/school-locations/canada/learn-english-in-toronto" target="_blank">EC トロント</a></div>
+<div class="card"><a href="https://www.ilsc.com/greystone-college" target="_blank">Greystone College</a></div>
+<div class="card"><a href="https://www.geos.net/" target="_blank">GEOS Languages Plus</a></div>
+<div class="card"><a href="http://torontonikkeiforum.forumotion.com/" target="_blank">トロント日系フォーラム</a></div>
+<div class="card"><a href="https://www.canadajournal.com/" target="_blank">カナダジャーナル</a></div>
+<div class="card"><a href="https://www.lifevancouver.jp/" target="_blank">LifeVancouver（現地情報）</a></div>
+<div class="card"><a href="https://torja.ca/" target="_blank">TORJA（トロント情報誌）</a></div>
+<div class="card"><a href="https://www.jccc.on.ca/" target="_blank">JCCC（トロント日系文化会館）</a></div>
+<div class="card"><a href="https://www.japansociety.org/" target="_blank">Japan Society</a></div>
+<div class="card"><a href="https://www.jnto.go.jp/" target="_blank">日本政府観光局 (JNTO)</a></div>
+<div class="card"><a href="https://www.ca.emb-japan.go.jp/itprtop_ja/index.html" target="_blank">在トロント日本国総領事館</a></div>
+<div class="card"><a href="https://www.mofa.go.jp/mofaj/" target="_blank">日本外務省</a></div>
+<div class="card"><a href="https://www.canada.ca/" target="_blank">カナダ政府公式</a></div>
+<div class="card"><a href="https://www.servicecanada.gc.ca/" target="_blank">Service Canada（カナダ行政）</a></div>
+<div class="card"><a href="https://www.canva.com/" target="_blank">Canva（デザインツール）</a></div>
+<div class="card"><a href="https://sunlife.ca/" target="_blank">Sun Life（サンライフ保険）</a></div>
+<div class="card"><a href="https://www.manulife.ca/" target="_blank">Manulife（マニュライフ保険）</a></div>
+<div class="card"><a href="https://www.bluecross.ca/" target="_blank">Blue Cross（ブルークロス保険）</a></div>
+<div class="card"><a href="https://rates.ca/?utm_source=kanetixltd.ca&utm_medium=KanetixisnowRATESDOTCA" target="_blank">RATESDOTCA（保険比較サイト）</a></div>
+
+<div class="card"><a href="https://www.mountsinai.on.ca/" target="_blank">Mount Sinai Hospital</a></div>
+<div class="card"><a href="https://sunnybrook.ca/" target="_blank">Sunnybrook Health Sciences Centre</a></div>
+<div class="card"><a href="https://www.uhn.ca/" target="_blank">University Health Network (UHN)</a></div>
+<div class="card"><a href="https://hollandbloorview.ca/" target="_blank">Holland Bloorview Kids Rehabilitation Hospital</a></div>
+<div class="card"><a href="https://www.womenscollegehospital.ca/" target="_blank">Women's College Hospital</a></div>
+<div class="card"><a href="https://sickkids.ca/" target="_blank">The Hospital for Sick Children (SickKids)</a></div>
+
+<div class="card"><a href="https://www.legalline.ca/" target="_blank">Legal Line（法律ガイド）</a></div>
+<div class="card"><a href="https://lawhelpontario.org/" target="_blank">Law Help Ontario</a></div>
+<div class="card"><a href="https://www.canadianlawlist.com/" target="_blank">Canadian Law List</a></div>
+<div class="card"><a href="https://www.sushikaji.com/" target="_blank">Sushi Kaji（寿司レストラン）</a></div>
+<div class="card"><a href="https://www.zenjapanese.ca/" target="_blank">Zen Japanese Restaurant</a></div>
+<div class="card"><a href="https://guu-izakaya.com/" target="_blank">GUU Izakaya（居酒屋）</a></div>
+<div class="card"><a href="https://www.kinoyatoronto.ca/" target="_blank">Kinoya Sushi & Bar</a></div>
+<div class="card"><a href="https://ramenisshin.com/" target="_blank">Ramen Isshin</a></div>
+<div class="card"><a href="https://kintonramen.com/" target="_blank">Kinton Ramen</a></div>
+<div class="card"><a href="https://zakkushi.com/ja/" target="_blank">Zakkushi（焼鳥屋）</a></div>
+
+<div class="card"><a href="https://www.tntsupermarket.com/" target="_blank">T&T Supermarket（アジア系スーパー）</a></div>
+<div class="card"><a href="https://www.instagram.com/heiseimart/" target="_blank">Heisei Mart（日本食スーパー）</a></div>
+<div class="card"><a href="https://www.instagram.com/sakuramarkethfx/" target="_blank">Sakura Market</a></div>
+<div class="card"><a href="https://www.japantrading.co.jp/" target="_blank">Japan Canada Trading</a></div>
+<div class="card"><a href="https://www.fujiya.ca/" target="_blank">Fujiya</a></div>
+<div class="card"><a href="https://www.aircanada.com/" target="_blank">Air Canada（エアカナダ）</a></div>
+<div class="card"><a href="https://www.westjet.com/" target="_blank">WestJet</a></div>
+<div class="card"><a href="https://www.flyporter.com/" target="_blank">Porter Airlines</a></div>
+<div class="card"><a href="https://www.jal.co.jp/jp/en/" target="_blank">日本航空 (JAL)</a></div>
+<div class="card"><a href="https://www.ana.co.jp/en/ca/" target="_blank">全日空 (ANA)</a></div>
+
+<div class="card"><a href="https://www.expedia.ca/" target="_blank">Expedia カナダ</a></div>
+<div class="card"><a href="https://www.booking.com/" target="_blank">Booking.com</a></div>
+<div class="card"><a href="https://www.hotels.com/" target="_blank">Hotels.com</a></div>
+<div class="card"><a href="https://www.agoda.com/" target="_blank">Agoda</a></div>
+<div class="card"><a href="https://www.airbnb.ca/" target="_blank">Airbnb</a></div>
+<div class="card"><a href="https://rentals.ca/"  target="_blank">Rentals.ca</a></div>
+<div class="card"><a href="https://www.toronto.ca/explore-enjoy/visitor-information/" target="_blank">トロント市観光案内</a></div>
+<div class="card"><a href="https://www.ontariotravel.net/en/home" target="_blank">オンタリオ州観光</a></div>
+<div class="card"><a href="https://www.destinationcanada.com/en" target="_blank">Destination Canada（カナダ観光局）</a></div>
+<div class="card"><a href="https://www.torontopearson.com/" target="_blank">トロントピアソン国際空港</a></div>
+<div class="card"><a href="https://www.jccc.on.ca/en/events" target="_blank">JCCC イベント</a></div>
+<div class="card"><a href="https://www.japanfestivalcanada.com/" target="_blank"> Japan Festival</a></div>
+<div class="card"><a href="https://www.torontojazz.com/" target="_blank">Toronto Jazz Festival</a></div>
+<div class="card"><a href="https://torontomarathon.com/" target="_blank">Toronto Marathon</a></div>
+
+<div class="card"><a href="https://meetup.com/cities/ca/on/toronto/" target="_blank">Meetup トロント</a></div>
+<div class="card"><a href="https://www.sportinglife10k.ca/" target="_blank">Sporting Life 10K</a></div>
+<div class="card"><a href="https://live.fujigoko.tv/" target="_blank">富士山ライブカメラ（富士五湖TV）</a></div>
+<div class="card"><a href="https://www.cametan.com/" target="_blank">日本全国ライブカメラ</a></div>
+
+<div class="card"><a href="https://www.windy.com/" target="_blank">Windy（天気予報＆気象ライブ）</a></div>
+<div class="card"><a href="https://www.accuweather.com/" target="_blank">AccuWeather（天気予報）</a></div>
+<div class="card"><a href="https://weather.gc.ca/canada_e.html" target="_blank">Environment Canada（カナダ気象庁）</a></div>
+    <div class="card"><a href="http://www.sumo.or.jp/" target="_blank">大相撲速報</a></div>
+    <div class="card"><a href="https://haiku.jp/" target="_blank">毎日俳句</a></div>
+    <div class="card"><a href="http://ci.nii.ac.jp/" target="_blank">学術専門誌検索</a></div>
+    <div class="card"><a href="https://www.bioweb.ne.jp/content_index" target="_blank">バイオ情報</a></div>
+    <div class="card"><a href="https://www.nihs.go.jp/hse/link/webguide.html" target="_blank">化学物情報</a></div>
+    <div class="card"><a href="http://www.aozora.gr.jp/" target="_blank">青空文庫</a></div>
+    <div class="card"><a href="https://bunshun.jp/list/magazine/gekkan-bunshun" target="_blank">文芸春秋</a></div>
+    <div class="card"><a href="http://www.blogmura.com/" target="_blank">にほんブログ村</a></div>
+    <div class="card"><a href="http://www.nifty.com/" target="_blank">＠ Nifty</a></div>
+    <div class="card"><a href="http://www.livedoor.com/" target="_blank">livedoor ブログ</a></div>
+    <div class="card"><a href="http://gigazine.net/" target="_blank">GIGAZINE</a></div>
+    <div class="card"><a href="http://www.lifehacker.jp/" target="_blank">ライフハッカー</a></div>
+    <div class="card"><a href="http://news4vip.livedoor.biz/" target="_blank">ニュー速クオリティ</a></div>
+    <div class="card"><a href="http://www.nicovideo.jp/" target="_blank">ニコニコ動画</a></div>
+    <div class="card"><a href="http://video.fc2.com/ja/" target="_blank">FC2 動画</a></div>
+    <div class="card"><a href="https://tvjapanlive.com/live-tv/" target="_blank">TVJapanLive </a></div>
+    <div class="card"><a href="https://st.benesse.ne.jp/ikuji/content/?id=88464" target="_blank">ひよこクラブ</a></div>
+    <div class="card"><a href="https://ikebatanursery.com/?fbclid=IwAR01WRwH4GF0cN57TYQRwwz_DeDSrEy8YRrrDpjylA94EToeteL7ATNHuM0" target="_blank">池端ナーサリー</a></div>
+    <div class="card"><a href="https://www.torontoftf.com/" target="_blank">Family Talks Forum</a></div>
+    <div class="card"><a href="https://nisshugakuin.org/" target="_blank">日修学院</a></div>
+    <div class="card"><a href="http://www.torontokokugokyoshitsu.com/" target="_blank">トロント国語教室</a></div>
+    <div class="card"><a href="https://nobbycosmic.com/Utagoe/Utagoe.htm" target="_blank">トロント歌声喫茶の会</a></div>
+    <div class="card"><a href="https://momiji.on.ca/ja/ホーム/" target="_blank">モミジ老人ホーム</a></div>
+    
+<div class="card"><a href="https://www.tomtom.com/en_gb/traffic-index/" target="_blank">TomTom Traffic（交通状況）</a></div>
+<div class="card"><a href="https://www.navitime.co.jp/" target="_blank">NAVITIME（日本交通情報）</a></div>
+<div class="card"><a href="https://transit.yahoo.co.jp/" target="_blank">Yahoo!路線情報（日本交通検索）</a></div>
+<div class="card"><a href="https://511on.ca/" target="_blank">オンタリオ州 511（道路情報）</a></div>
+<div class="card"><a href="https://www.ttc.ca/service-alerts" target="_blank">TTC Service Alerts（トロント交通情報）</a></div>
+
+      <!-- ▲▲▲ 链接结束 ▲▲▲ -->
+
+    </div>
+
+    <section class="media-section">
+      <div class="media-inner">
+        <div class="media-header">
+          <h2>@遠方の歌</h2>
+          <div class="media-stats">
+            <span class="media-stat">
+              <span class="stat-label">再生:</span>
+              <span id="play-count" class="stat-value">0</span>
+            </span>
+            <button type="button" id="like-button" class="like-button" aria-label="いいね">
+              <span aria-hidden="true">👍</span>
+              <span id="like-count" class="stat-value">0</span>
+            </button>
+          </div>
+        </div>
+        <video id="music-player" class="media-player" controls preload="none" playsinline></video>
+        <!-- 「attachments」フォルダへ動画や音声ファイルを保存し、下のプレイリストの data-src をファイル名に合わせてください。ボタンを押すとプレイヤーに読み込みます。 -->
+        <ul id="music-playlist" class="playlist">
+          <li>
+            <button type="button" data-src="attachments/約束の梧桐通り.mp4">約束の梧桐通り</button>
+          </li>
+        </ul>
+      </div>
+    </section>
+  </div>
+
+  <!-- 底部横幅 -->
+  <footer>
+    <div class="footer-content">
+      <p>© NewShawnSation, Since 20010101.</p>
+      <p>更新日: <span id="update-date"></span></p>
+      <div class="counter">
+        <!-- 计数器代码（可以替换为你自己的） -->
+        <!-- Default Statcounter code for jlinks toronto
+http://jlinks.web.fc2.com/ -->
+<script type="text/javascript">
+  var sc_project=7250298; 
+  var sc_invisible=0; 
+  var sc_security="bc4b94fb"; 
+  var scJsHost = "https://";
+  document.write("<sc"+"ript type='text/javascript' src='" +
+  scJsHost+
+  "statcounter.com/counter/counter.js'></"+"script>");
+  </script>
+  <noscript><div class="statcounter"><a title="Web Analytics"
+  href="https://statcounter.com/" target="_blank"><img
+  class="statcounter"
+  src="https://c.statcounter.com/7250298/0/bc4b94fb/0/"
+  alt="Web Analytics"
+  referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
+  <!-- End of Statcounter Code -->
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // 设置更新日期
+    document.getElementById("update-date").textContent = new Date().toISOString().slice(0, 10);
+
+    (function () {
+      const player = document.getElementById("music-player");
+      const playlist = document.getElementById("music-playlist");
+      if (!player || !playlist) {
+        return;
+      }
+
+      const playCountEl = document.getElementById("play-count");
+      const likeButton = document.getElementById("like-button");
+      const likeCountEl = document.getElementById("like-count");
+      let playCount = 0;
+      let likeCount = 0;
+
+      function updatePlayCount() {
+        if (playCountEl) {
+          playCountEl.textContent = playCount;
+        }
+      }
+
+      function updateLikeCount() {
+        if (likeCountEl) {
+          likeCountEl.textContent = likeCount;
+        }
+      }
+
+      const firstButton = playlist.querySelector("button[data-src]");
+      if (firstButton) {
+        player.src = firstButton.getAttribute("data-src");
+        player.load();
+        firstButton.classList.add("is-active");
+      }
+
+      if (likeButton) {
+        likeButton.addEventListener("click", function () {
+          likeCount += 1;
+          updateLikeCount();
+        });
+      }
+
+      playlist.addEventListener("click", function (event) {
+        const button = event.target.closest("button[data-src]");
+        if (!button) {
+          return;
+        }
+
+        const source = button.getAttribute("data-src");
+        if (!source) {
+          return;
+        }
+
+        player.src = source;
+        player.load();
+        player.play().catch(function () {
+          // Autoplay might be blocked by the browser; manual play fallback.
+        });
+
+        playCount += 1;
+        updatePlayCount();
+
+        playlist.querySelectorAll("button").forEach(function (item) {
+          item.classList.toggle("is-active", item === button);
+        });
+      });
+
+      updatePlayCount();
+      updateLikeCount();
+    })();
+  </script>
+
+</body>
+</html>
